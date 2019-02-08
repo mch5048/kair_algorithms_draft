@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Run module for DDPG on LunarLanderContinuous-v2.
+"""Run module for DDPG with PER on LunarLanderContinuous-v2.
 
 - Author: Curt Park
 - Contact: curt.park@medipixel.io
@@ -13,7 +13,7 @@ import torch.optim as optim
 
 from algorithms.common.networks.mlp import MLP
 from algorithms.common.noise import OUNoise
-from algorithms.ddpg.agent import Agent
+from algorithms.per.ddpg_agent import Agent
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -23,10 +23,13 @@ hyper_params = {
     "TAU": 1e-3,
     "BUFFER_SIZE": int(1e5),
     "BATCH_SIZE": 128,
-    "LR_ACTOR": 1e-3,
+    "LR_ACTOR": 1e-4,
     "LR_CRITIC": 1e-3,
     "OU_NOISE_THETA": 0.0,
     "OU_NOISE_SIGMA": 0.0,
+    "PER_ALPHA": 0.5,
+    "PER_BETA": 0.4,
+    "PER_EPS": 1e-6,
     "WEIGHT_DECAY": 1e-6,
 }
 
@@ -41,31 +44,36 @@ def run(env: gym.Env, args: argparse.Namespace, state_dim: int, action_dim: int)
         action_dim (int): dimension of actions
 
     """
-    hidden_sizes = [256, 256]
+    hidden_sizes_actor = [400, 300]
+    hidden_sizes_critic = [400, 300]
 
     # create actor
     actor = MLP(
         input_size=state_dim,
         output_size=action_dim,
-        hidden_sizes=hidden_sizes,
+        hidden_sizes=hidden_sizes_actor,
         output_activation=torch.tanh,
     ).to(device)
 
     actor_target = MLP(
         input_size=state_dim,
         output_size=action_dim,
-        hidden_sizes=hidden_sizes,
+        hidden_sizes=hidden_sizes_actor,
         output_activation=torch.tanh,
     ).to(device)
     actor_target.load_state_dict(actor.state_dict())
 
     # create critic
     critic = MLP(
-        input_size=state_dim + action_dim, output_size=1, hidden_sizes=hidden_sizes
+        input_size=state_dim + action_dim,
+        output_size=1,
+        hidden_sizes=hidden_sizes_critic,
     ).to(device)
 
     critic_target = MLP(
-        input_size=state_dim + action_dim, output_size=1, hidden_sizes=hidden_sizes
+        input_size=state_dim + action_dim,
+        output_size=1,
+        hidden_sizes=hidden_sizes_critic,
     ).to(device)
     critic_target.load_state_dict(critic.state_dict())
 
