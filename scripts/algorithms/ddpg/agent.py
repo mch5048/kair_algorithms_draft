@@ -53,7 +53,7 @@ class Agent(AbstractAgent):
         """Initialization.
 
         Args:
-            env (gym.Env): openAI Gym environment with discrete action space
+            env (gym.Env): openAI Gym environment
             args (argparse.Namespace): arguments including hyperparameters and training settings
             hyper_params (dict): hyper-parameters
             models (tuple): models including actor and critic
@@ -84,9 +84,10 @@ class Agent(AbstractAgent):
 
         state = torch.FloatTensor(state).to(device)
         selected_action = self.actor(state)
-        selected_action += torch.FloatTensor(self.noise.sample()).to(device)
 
-        selected_action = torch.clamp(selected_action, -1.0, 1.0)
+        if not self.args.test:
+            selected_action += torch.FloatTensor(self.noise.sample()).to(device)
+            selected_action = torch.clamp(selected_action, -1.0, 1.0)
 
         return selected_action
 
@@ -95,7 +96,7 @@ class Agent(AbstractAgent):
         action = action.detach().cpu().numpy()
         next_state, reward, done, _ = self.env.step(action)
 
-        self.memory.add(self.curr_state, action, reward, next_state, done)
+        self.memory.add(self.curr_state, action, reward, next_state, float(done))
 
         return next_state, reward, done
 

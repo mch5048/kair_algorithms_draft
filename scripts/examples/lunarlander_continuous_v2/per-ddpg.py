@@ -44,8 +44,8 @@ def run(env: gym.Env, args: argparse.Namespace, state_dim: int, action_dim: int)
         action_dim (int): dimension of actions
 
     """
-    hidden_sizes_actor = [400, 300]
-    hidden_sizes_critic = [400, 300]
+    hidden_sizes_actor = [256, 256]
+    hidden_sizes_critic = [256, 256]
 
     # create actor
     actor = MLP(
