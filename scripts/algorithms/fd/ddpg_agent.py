@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """DDPG agent with PER using demo agent for episodic tasks in OpenAI Gym.
-- Author: Kh Kim
-- Contact: kh.kim@medipixel.io
+- Author: Kh Kim, SJ Lee
+- Contact: kh.kim@medipixel.io, seungjaeryanlee@gmail.com
 - Paper: https://arxiv.org/pdf/1509.02971.pdf
          https://arxiv.org/pdf/1511.05952.pdf
          https://arxiv.org/pdf/1707.08817.pdf

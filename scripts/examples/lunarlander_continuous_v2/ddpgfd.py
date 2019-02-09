@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Run module for DDPGfD on LunarLanderContinuous-v2.
-- Author: Curt Park
-- Contact: curt.park@medipixel.io
+- Author: Curt Park, SJ Lee
+- Contact: curt.park@medipixel.io, seungjaeryanlee@gmail.com
 """
 
 import argparse
