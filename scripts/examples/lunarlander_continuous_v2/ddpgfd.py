@@ -24,14 +24,6 @@ hyper_params = {
     # Soft update
     #  - DDPG page 11: "For the soft target updates..."
     "TAU": 1e-3,
-    # Replay Buffer
-    #  - DDPG page 11: "We used a replay buffer size of 10^6."
-    #  - Used 1e5 instead of 1e6
-    "BUFFER_SIZE": int(1e5),
-    # Minibatch size
-    #  - DDPG page 11: "We trained with minibatch sizes of 64..."
-    #  - Used 128 instead of 64 or 16
-    "BATCH_SIZE": 128,
     # Adam learning rates for Actor and Critic
     #  - DDPG page 11: "We used Adam..."
     "LR_ACTOR": 1e-4,
@@ -48,14 +40,23 @@ hyper_params = {
     "MULTIPLE_LEARN": 1,
     # Weights for computing the weighted sum
     #  - DDPGfD page 3: "The final loss can be written as..."
-    "LAMDA1": 1.0,  # N-step return weight
-    "LAMDA2": 1e-5,  # l2 regularization weight
-    "LAMDA3": 1.0,  # actor loss contribution of prior weight
+    "LAMBDA1": 1.0,  # N-step return weight (TODO not implemented)
+    "LAMBDA2": 1e-5,  # l2 regularization weight (TODO not implemented)
+    "LAMBDA3": 1.0,  # actor loss contribution of prior weight
+    # Experience Replay Buffer
+    #  - DDPG page 11: "We used a replay buffer size of 10^6."
+    #  - Used 1e5 instead of 1e6
+    "BUFFER_SIZE": int(1e5),
+    # Minibatch size
+    #  - DDPG page 11: "We trained with minibatch sizes of 64..."
+    #  - Used 128 instead of 64 or 16
+    "BATCH_SIZE": 128,
     # Prioritized Experience Replay
     #  - DDPGfD page 3: "DDPGfD uses prioritized replay..."
     "PER_ALPHA": 0.3,
     "PER_BETA": 1.0,
     "PER_EPS": 1e-6,
+    "PER_EPS_DEMO": 1.0,
 }
 
 
