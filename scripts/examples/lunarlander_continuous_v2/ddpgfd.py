@@ -28,7 +28,6 @@ hyper_params = {
     #  - DDPG page 11: "We used Adam..."
     "LR_ACTOR": 1e-4,
     "LR_CRITIC": 1e-3,
-    "LR_WEIGHT_DECAY": 1e-6,
     # Ornstein-Uhlenbeck Noise
     #  - DDPG page 11: "For the exploration noise process..."
     #  - Used (0, 0) instead of (0.15, 0.2)
@@ -40,9 +39,11 @@ hyper_params = {
     "MULTIPLE_LEARN": 1,
     # Weights for computing the weighted sum
     #  - DDPGfD page 3: "The final loss can be written as..."
+    #  - DDPG page 11: "For Q we included L_2 weight decay..."
+    #  - Hyperparameters not specified for LAMBDA1
+    #  - Used 1e-6 instead of 1e-2 for LAMBDA2
     "LAMBDA1": 1.0,  # N-step return weight (TODO not implemented)
-    "LAMBDA2": 1e-5,  # l2 regularization weight (TODO not implemented)
-    "LAMBDA3": 1.0,  # actor loss contribution of prior weight
+    "LAMBDA2": 1e-6,  # L2 regularization weight
     # Experience Replay Buffer
     #  - DDPG page 11: "We used a replay buffer size of 10^6."
     #  - Used 1e5 instead of 1e6
@@ -53,10 +54,12 @@ hyper_params = {
     "BATCH_SIZE": 128,
     # Prioritized Experience Replay
     #  - DDPGfD page 3: "DDPGfD uses prioritized replay..."
+    #  - Hyperparameters not specified for LAMBDA1
     "PER_ALPHA": 0.3,
     "PER_BETA": 1.0,
     "PER_EPS": 1e-6,
     "PER_EPS_DEMO": 1.0,
+    "LAMBDA3": 1.0,  # Actor loss weight for computing priority
 }
 
 
@@ -105,13 +108,13 @@ def run(env: gym.Env, args: argparse.Namespace, state_dim: int, action_dim: int)
     actor_optim = optim.Adam(
         actor.parameters(),
         lr=hyper_params["LR_ACTOR"],
-        weight_decay=hyper_params["LR_WEIGHT_DECAY"],
+        weight_decay=hyper_params["LAMBDA2"],
     )
 
     critic_optim = optim.Adam(
         critic.parameters(),
         lr=hyper_params["LR_CRITIC"],
-        weight_decay=hyper_params["LR_WEIGHT_DECAY"],
+        weight_decay=hyper_params["LAMBDA2"],
     )
 
     # noise

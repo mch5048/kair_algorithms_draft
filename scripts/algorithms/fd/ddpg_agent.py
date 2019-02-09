@@ -125,6 +125,8 @@ class Agent(AbstractAgent):
 
         # train critic
         values = self.critic(torch.cat((states, actions), dim=-1))
+        # TODO Add n-step return loss
+        # L2 regularization loss is added in Adam optimizer via weight decay
         critic_loss = torch.mean((values - curr_returns).pow(2) * weights)
         self.critic_optimizer.zero_grad()
         critic_loss.backward()
