@@ -8,7 +8,6 @@
 """
 
 import random
-from collections import deque
 from typing import Tuple
 
 import numpy as np
@@ -37,14 +36,14 @@ class PrioritizedReplayBuffer(ReplayBuffer):
         """
 
     def __init__(
-        self, buffer_size: int, batch_size: int, demo: deque = None, alpha: float = 0.6
+        self, buffer_size: int, batch_size: int, demo: list = None, alpha: float = 0.6
     ):
         """Initialization.
 
         Args:
             buffer_size (int): size of replay buffer for experience
             batch_size (int): size of a batched sampled from replay buffer for training
-            demo (deque): demonstration
+            demo (list): demonstration
             alpha (float): alpha parameter for prioritized replay buffer
 
         """
@@ -120,7 +119,7 @@ class PrioritizedReplayBuffer(ReplayBuffer):
             actions.append(np.array(a, copy=False))
             rewards.append(np.array(r, copy=False))
             next_states.append(np.array(n_s, copy=False))
-            dones.append(np.array(d, copy=False))
+            dones.append(np.array(float(d), copy=False))
 
             # calculate weights
             p_sample = self.sum_tree[i] / self.sum_tree.sum()
