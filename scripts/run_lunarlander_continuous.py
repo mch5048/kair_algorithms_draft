@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """Train or test baselines on LunarLanderContinuous-v2.
 
