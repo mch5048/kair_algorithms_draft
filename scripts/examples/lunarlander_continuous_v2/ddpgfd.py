@@ -18,22 +18,44 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 # hyper parameters
 hyper_params = {
+    # Discount factor
+    #  - DDPG page 11: "For Q we included..."
     "GAMMA": 0.99,
+    # Soft update
+    #  - DDPG page 11: "For the soft target updates..."
     "TAU": 1e-3,
+    # Replay Buffer
+    #  - DDPG page 11: "We used a replay buffer size of 10^6."
+    #  - Used 1e5 instead of 1e6
     "BUFFER_SIZE": int(1e5),
+    # Minibatch size
+    #  - DDPG page 11: "We trained with minibatch sizes of 64..."
+    #  - Used 128 instead of 64 or 16
     "BATCH_SIZE": 128,
+    # Adam learning rates for Actor and Critic
+    #  - DDPG page 11: "We used Adam..."
     "LR_ACTOR": 1e-4,
     "LR_CRITIC": 1e-3,
+    "LR_WEIGHT_DECAY": 1e-6,
+    # Ornstein-Uhlenbeck Noise
+    #  - DDPG page 11: "For the exploration noise process..."
+    #  - Used (0, 0) instead of (0.15, 0.2)
     "OU_NOISE_THETA": 0.0,
     "OU_NOISE_SIGMA": 0.0,
-    "MULTIPLE_LEARN": 1,  # multiple learning updates
+    # Multiple learning updates per environment step
+    #  - DDPGfD page 3: "A third modification is to do..."
+    #  - Used 1 instead of 20 or 40
+    "MULTIPLE_LEARN": 1,
+    # Weights for computing the weighted sum
+    #  - DDPGfD page 3: "The final loss can be written as..."
     "LAMDA1": 1.0,  # N-step return weight
     "LAMDA2": 1e-5,  # l2 regularization weight
     "LAMDA3": 1.0,  # actor loss contribution of prior weight
+    # Prioritized Experience Replay
+    #  - DDPGfD page 3: "DDPGfD uses prioritized replay..."
     "PER_ALPHA": 0.3,
     "PER_BETA": 1.0,
     "PER_EPS": 1e-6,
-    "WEIGHT_DECAY": 1e-6,
 }
 
 
