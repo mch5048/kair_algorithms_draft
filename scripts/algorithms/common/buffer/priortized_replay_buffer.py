@@ -59,7 +59,7 @@ class PrioritizedReplayBufferfD(ReplayBuffer):
         self.demo = demo
         self.buffer_size = buffer_size
         self.demo_size = len(demo)
-        self.total_size = self.demo_size + len(self.buffer)
+        self.total_size = self.demo_size  # Current buffer size, NOT maximum size
         self.alpha = alpha
         self.epsilon_d = epsilon_d
         self.tree_idx = 0
@@ -73,11 +73,11 @@ class PrioritizedReplayBufferfD(ReplayBuffer):
         self.min_tree = MinSegmentTree(tree_capacity)
         self.init_priority = 1.0
 
-        # for init priority of demo
-        for _ in range(self.demo_size):
-            self.sum_tree[self.tree_idx] = self.init_priority ** self.alpha
-            self.min_tree[self.tree_idx] = self.init_priority ** self.alpha
-            self.tree_idx += 1
+        # Initialize demonstration data priority
+        for demo_idx in range(self.demo_size):
+            self.sum_tree[demo_idx] = self.init_priority ** self.alpha
+            self.min_tree[demo_idx] = self.init_priority ** self.alpha
+        self.tree_idx += self.demo_size
 
     def add(
         self,
